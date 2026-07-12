@@ -1,0 +1,119 @@
+#register
+POST http://127.0.0.1:8000/api/register/
+Content-Type: application/json
+
+{
+  "username": "mate1",
+  "email": "mate@example.com",
+  "first_name": "Mate",
+  "last_name": "Rogava",
+  "password": "123456",
+  "password2": "123456"
+}
+
+### Login
+POST http://127.0.0.1:8000/api/login/
+Content-Type: application/json
+
+{
+  "username": "lukkaa",
+  "password": "123"
+}
+
+### WhoAmI
+GET http://127.0.0.1:8000/api/whoami/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY0Njc1NDgxLCJpYXQiOjE3NjQ2NzE4ODIsImp0aSI6ImI1NzBmNTZiYTgxNDRlN2NhNDBiZjJmMGFiNTIwNTVlIiwidXNlcl9pZCI6IjkifQ.FYdmUXsqa_hHvkg_R4EeeAXL_fR6A-Bj2pHG_qoxt10
+
+### Refresh Token
+POST http://127.0.0.1:8000/api/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2NTE5MzM5NSwiaWF0IjoxNzY0NTg4NTk1LCJqdGkiOiIzYjc4M2M5NmFkMDg0N2Y1OGQwMWY1NzA1NjE3M2RmYyIsInVzZXJfaWQiOiI5In0.aQod5geE_C2hrAtozwEte2ueIF-bFZwdmDKPrpjGiMQ"
+}
+
+### 1️⃣ WhoAmI as guest
+GET http://127.0.0.1:8000/api/whoami/
+Accept: application/json
+
+###
+
+### 2️⃣ Get Guest Session
+GET http://127.0.0.1:8000/api/guest-session/
+Accept: application/json
+
+
+#################################################################################
+### 1. Get or create guest cart
+GET http://127.0.0.1:8000/api/cart/
+
+###
+
+### 2. Add perfume ID = 1 to guest cart
+POST http://127.0.0.1:8000/api/cart/add/1/
+Content-Type: application/json
+
+{}
+
+###
+
+### 3. Update the item — include cookie returned above:
+POST http://127.0.0.1:8000/api/cart/update/108/
+Content-Type: application/json
+Cookie: guest_id=9e534a5d-22a9-4adc-9d2a-ff9f1e265ef0
+
+{
+  "quantity": 5
+}
+
+###
+
+### 4. Remove item ID = 3
+DELETE http://127.0.0.1:8000/api/cart/remove/108/
+Cookie: guest_id=9e534a5d-22a9-4adc-9d2a-ff9f1e265ef0
+
+#########################
+
+### LOGIN
+POST http://127.0.0.1:8000/api/login/
+Content-Type: application/json
+
+{
+  "username": "lukkaa",
+  "password": "123"
+}
+
+###
+
+### GET CART (AUTH USER)
+GET http://127.0.0.1:8000/api/cart/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1MTg3ODgyLCJpYXQiOjE3NjUxODQyODMsImp0aSI6IjQzYmU4N2QyMDY2YjRmZWM4MjVhNzMwNTAzZjQwMmQ3IiwidXNlcl9pZCI6IjEwIn0.rxtgFa8IaisDcJ7eV8Pi7cH8RNVLE3hXB2lXB4d5kq0
+###
+
+### ADD ITEM for AUTH USER
+POST http://127.0.0.1:8000/api/cart/add/5/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1MTg3ODgyLCJpYXQiOjE3NjUxODQyODMsImp0aSI6IjQzYmU4N2QyMDY2YjRmZWM4MjVhNzMwNTAzZjQwMmQ3IiwidXNlcl9pZCI6IjEwIn0.rxtgFa8IaisDcJ7eV8Pi7cH8RNVLE3hXB2lXB4d5kq0
+Content-Type: application/json
+
+{}
+
+###
+
+### UPDATE ITEM for AUTH USER
+POST http://127.0.0.1:8000/api/cart/update/105/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1MTg3ODgyLCJpYXQiOjE3NjUxODQyODMsImp0aSI6IjQzYmU4N2QyMDY2YjRmZWM4MjVhNzMwNTAzZjQwMmQ3IiwidXNlcl9pZCI6IjEwIn0.rxtgFa8IaisDcJ7eV8Pi7cH8RNVLE3hXB2lXB4d5kq0
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+###
+
+### REMOVE ITEM for AUTH USER
+DELETE http://127.0.0.1:8000/api/cart/remove/107/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1MTg3ODgyLCJpYXQiOjE3NjUxODQyODMsImp0aSI6IjQzYmU4N2QyMDY2YjRmZWM4MjVhNzMwNTAzZjQwMmQ3IiwidXNlcl9pZCI6IjEwIn0.rxtgFa8IaisDcJ7eV8Pi7cH8RNVLE3hXB2lXB4d5kq0
+
+########## ORDER HISTORY #############
+GET http://localhost:8000/orders/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1MjgxMTE2LCJpYXQiOjE3NjUyNzc1MTYsImp0aSI6ImQwODM3N2M1OTMxMDRlODc5NTE4NGI1NWQ0MTgwNTM4IiwidXNlcl9pZCI6IjEwIn0.aRe4P-ddGn1JlDe1sjw9qDkuBtwL2kEH2xAusbEG9KA

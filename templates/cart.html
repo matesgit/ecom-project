@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f6f7f9;
+        }
+
+        .cart-card {
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            background: #fff;
+        }
+
+        .cart-title {
+            font-weight: 600;
+        }
+
+        .table th {
+            background-color: #f1f3f6;
+            font-weight: 500;
+        }
+
+        .qty-input {
+            width: 80px;
+            margin: auto;
+        }
+
+        .btn-update {
+            background-color: #198754;
+            border: none;
+        }
+
+        .btn-update:hover {
+            background-color: #157347;
+        }
+
+        .total-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .cart-items-scroll {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .cart-items-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cart-items-scroll::-webkit-scrollbar-thumb {
+            background-color: #cfcfcf;
+            border-radius: 10px;
+        }
+
+        .cart-items-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: #b5b5b5;
+        }
+
+        .perfume-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="row g-4">
+
+        <!-- CART ITEMS -->
+        <div class="col-lg-8">
+            <div class="cart-card p-4">
+                <h4 class="cart-title mb-4">🛒 Your Shopping Cart</h4>
+
+                <div class="cart-items-scroll">
+                    <table class="table align-middle text-center" id="cart-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th class="text-start">Perfume</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-items"></tbody>
+                    </table>
+                </div>
+
+                <div id="empty-message" class="empty-cart">
+                    Loading cart...
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="col-lg-4">
+            <div class="total-box">
+                <h5 class="mb-3">Order Summary</h5>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Total</span>
+                    <strong><span id="total-price">0</span> GEL</strong>
+                </div>
+
+                <hr>
+
+                <a href="api/checkout/" class="btn btn-success w-100 mb-2">
+                    Proceed to Checkout
+                </a>
+
+                <a href="/" class="btn btn-outline-secondary w-100">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function getAuthHeaders() {
+    const token = localStorage.getItem('access_token');
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = "Bearer " + token;
+    return headers;
+}
+
+// LOAD CART ITEMS
+async function loadCart() {
+    try {
+        const res = await fetch('/api/cart/', {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        const data = await res.json();
+
+        const container = document.getElementById('cart-items');
+        const table = document.getElementById('cart-table');
+        const emptyMsg = document.getElementById('empty-message');
+        const totalEl = document.getElementById('total-price');
+
+        container.innerHTML = '';
+        let total = 0;
+
+        if (!data.items || data.items.length === 0) {
+            table.style.display = 'none';
+            emptyMsg.innerHTML = '🛍️ Your cart is empty';
+            totalEl.textContent = '0';
+            return;
+        }
+
+        table.style.display = 'table';
+        emptyMsg.style.display = 'none';
+
+        data.items.forEach(item => {
+            total += item.subtotal;
+
+            container.innerHTML += `
+                <tr>
+                    <td>
+                        <img src="${item.perfume.image}" class="perfume-img">
+                    </td>
+                    <td class="text-start">${item.perfume.name}</td>
+                    <td>${item.perfume.price} GEL</td>
+                    <td>
+                        <input type="number"
+                               id="qty-${item.id}"
+                               class="form-control qty-input"
+                               value="${item.quantity}"
+                               min="1">
+                    </td>
+                    <td><strong>${item.subtotal} GEL</strong></td>
+                    <td>
+                        <button class="btn btn-update btn-sm mb-1" onclick="updateItem(${item.id})">
+                            Update
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        totalEl.textContent = total;
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById('empty-message').textContent = 'Failed to load cart.';
+    }
+}
+
+// UPDATE ITEM
+async function updateItem(itemId) {
+    const qty = document.getElementById(`qty-${itemId}`).value;
+
+    try {
+        const res = await fetch(`/api/cart/update/${itemId}/`, {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ quantity: qty })
+        });
+
+        if (res.ok) loadCart();
+        else alert("Failed to update item");
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// DELETE ITEM
+async function deleteItem(itemId) {
+    try {
+        const res = await fetch(`/api/cart/remove/${itemId}/`, {
+            method: "DELETE",
+            headers: getAuthHeaders()
+        });
+
+        if (res.ok) loadCart();
+        else alert("Failed to delete");
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// INITIAL LOAD
+loadCart();
+</script>
+
+</body>
+</html>
