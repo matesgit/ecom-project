@@ -1,0 +1,82 @@
+body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        .page-title {
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .card-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+
+        .table thead th {
+            background: #f8f9fb;
+            font-weight: 500;
+            border-bottom: none;
+        }
+
+        .product-name {
+            font-weight: 500;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .summary-total {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-success {
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 500;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .sticky-summary {
+            position: sticky;
+            top: 30px;
+        }
+        .items-scroll-box {
+    max-height: 360px; /* shows ~4 items */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Optional: nicer scrollbar */
+.items-scroll-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.items-scroll-box::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.items-scroll-box::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}

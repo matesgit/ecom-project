@@ -1,0 +1,113 @@
+body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        h2 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #4b2e83;
+        }
+
+        #ordersContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .order-header {
+            font-weight: 600;
+            font-size: 20px;
+            color: #2c2c54;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .order-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .completed { background-color: #28a745; }
+        .pending { background-color: #ffc107; color: #333; }
+
+        .order-items {
+            margin-top: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item img {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+            margin-right: 15px;
+            border-radius: 8px;
+        }
+
+        .item-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .order-total {
+            text-align: right;
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
+            color: #e74c3c;
+        }
+
+        #ordersContainer p {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .order-card { padding: 20px; }
+            .order-header { font-size: 18px; }
+            .order-total { font-size: 16px; }
+        }

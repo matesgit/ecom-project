@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,121 +7,7 @@
     <title>My Orders</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f0f2f5;
-            color: #333;
-        }
-
-        h2 {
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #4b2e83;
-        }
-
-        #ordersContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .order-card {
-            background: #fff;
-            padding: 25px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .order-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-        }
-
-        .order-header {
-            font-weight: 600;
-            font-size: 20px;
-            color: #2c2c54;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 5px;
-        }
-
-        .order-status {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .completed { background-color: #28a745; }
-        .pending { background-color: #ffc107; color: #333; }
-
-        .order-items {
-            margin-top: 15px;
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .order-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed #ddd;
-        }
-
-        .order-item:last-child {
-            border-bottom: none;
-        }
-
-        .order-item img {
-            height: 50px;
-            width: 50px;
-            object-fit: contain;
-            margin-right: 15px;
-            border-radius: 8px;
-        }
-
-        .item-info {
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
-
-        .item-name {
-            font-weight: 500;
-        }
-
-        .order-total {
-            text-align: right;
-            font-weight: 700;
-            font-size: 18px;
-            margin-top: 15px;
-            color: #e74c3c;
-        }
-
-        #ordersContainer p {
-            text-align: center;
-            font-size: 16px;
-            color: #555;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 576px) {
-            .order-card { padding: 20px; }
-            .order-header { font-size: 18px; }
-            .order-total { font-size: 16px; }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/order_history.css' %}">
 </head>
 <body>
     <a href="/" class="btn btn-outline-secondary w-100">
@@ -130,72 +18,9 @@
     <div id="ordersContainer">Loading orders...</div>
 </div>
 
-<script>
-const ordersContainer = document.getElementById('ordersContainer');
-const token = localStorage.getItem('access_token');
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-if (!token) {
-    ordersContainer.innerHTML = "<p>You must be logged in to view your orders.</p>";
-} else {
-    fetch('/api/orders/', {
-        headers: { "Authorization": "Bearer " + token }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch orders.");
-        return res.json();
-    })
-    .then(data => {
-        const orders = data.orders;
-        if (!orders.length) {
-            ordersContainer.innerHTML = "<p>You have no orders yet.</p>";
-            return;
-        }
-
-        ordersContainer.innerHTML = '';
-        orders.forEach(order => {
-            const orderEl = document.createElement('div');
-            orderEl.classList.add('order-card');
-
-            // Build items HTML
-            let itemsHtml = '<div class="order-items">';
-            order.items.forEach(item => {
-                itemsHtml += `<div class="order-item">
-                    <div class="item-info">
-                        <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.perfume_name}">
-                        <span class="item-name">${item.perfume_name} (x${item.quantity})</span>
-                    </div>
-                    <span>$${item.subtotal}</span>
-                </div>`;
-            });
-            itemsHtml += '</div>';
-
-            // Order card inner HTML
-            orderEl.innerHTML = `
-                <div class="order-header">
-                    <span>Order #${order.id} - ${new Date(order.created_at).toLocaleString()}</span>
-                    <span class="order-status ${order.completed ? 'completed' : 'pending'}">
-                        ${order.completed ? 'Completed' : 'Pending'}
-                    </span>
-                </div>
-                ${itemsHtml}
-                <div class="order-total">Total: $${order.total}</div>
-            `;
-
-            // Toggle items visibility on header click
-            const header = orderEl.querySelector('.order-header');
-            const itemsDiv = orderEl.querySelector('.order-items');
-            header.addEventListener('click', () => {
-                itemsDiv.style.display = itemsDiv.style.display === 'flex' ? 'none' : 'flex';
-            });
-
-            ordersContainer.appendChild(orderEl);
-        });
-    })
-    .catch(err => {
-        console.error(err);
-        ordersContainer.innerHTML = "<p>Error loading orders. Please try again later.</p>";
-    });
-}
-</script>
+    <!-- Orders JS -->
+    <script src="{% static 'js/order_history.js' %}" defer></script>
 </body>
 </html>
